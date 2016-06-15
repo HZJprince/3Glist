@@ -1,0 +1,36 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="_3Glist._Default" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>3G账单</title>
+    <style type="text/css">
+        .style1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:3glist %>" 
+      ProviderName="<%$ ConnectionStrings:3glist.ProviderName %>" 
+      SelectCommand="SELECT dpt_name FROM CardList group by dpt_name" 
+      DataSourceMode="DataReader">
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:3glist %>" 
+      ProviderName="<%$ ConnectionStrings:3glist.ProviderName %>" 
+      SelectCommand="SELECT CardList.dpt_cde,CardList.dpt_name,accountList.* FROM CardList inner join accountList on CardList.ID = accountList.ID Where CardList.ID in (select ID from CardList where dpt_name = @dpt_name)">
+      <SelectParameters>
+        <asp:ControlParameter ControlID="DropDownList1" Name="dpt_name" PropertyName="SelectedValue" />
+      </SelectParameters>
+    </asp:SqlDataSource>
+    <p class="style1">机构列表
+     <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="dpt_name" DataValueField="dpt_name"></asp:DropDownList>
+    </p>
+    <asp:GridView ID="GridView1" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSource2" CellPadding="3" Font-Size="Large"></asp:GridView>
+    </div>
+    </form>
+</body>
+</html>
